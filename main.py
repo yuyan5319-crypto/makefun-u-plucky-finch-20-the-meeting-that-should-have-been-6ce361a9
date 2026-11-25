@@ -15,16 +15,25 @@ no trailing newline, 120 characters, plain UTF-8.
 
 import os
 
-LINE = (
-    "The meeting's only decision was unanimous: this should have been "
-    "an email \u2014 so we scheduled another meeting to write it."
-)
+# The verdict and the response, kept as separate clauses: the first
+# states the meeting's only decision, the second is what the meeting
+# did about it. Joined with an em dash, the pivot the joke turns on.
+VERDICT = "The meeting's only decision was unanimous: this should have been an email"
+RESPONSE = "so we scheduled another meeting to write it."
+
+LINE = VERDICT + " \u2014 " + RESPONSE
+
+
+def validate_line(text):
+    """One fixed line: 1-200 characters, no newline, no trailing space."""
+    assert 1 <= len(text) <= 200, "entry must be 1-200 characters"
+    assert "\n" not in text, "entry must be a single line"
+    assert text == text.strip(), "entry must not have surrounding whitespace"
 
 
 def main() -> None:
     text = LINE.strip()
-    assert 1 <= len(text) <= 200, "entry must be 1-200 characters"
-    assert "\n" not in text, "entry must be a single line"
+    validate_line(text)
     out_dir = "/output"
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as f:
